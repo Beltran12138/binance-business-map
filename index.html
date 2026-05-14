@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>币安全业务地图 v2 · HighBlock</title>
+<style>
+:root {
+  --navy: #1B2A5A;
+  --navy-deep: #0F1A3E;
+  --bg: #FFFFFF;
+  --soft: #F7F8FA;
+  --soft-2: #EFF1F5;
+  --text: #1A1A1A;
+  --muted: #6B7280;
+  --rule: #DEE1E7;
+  --accent: #C9A24C;
+  --up: #00754A;
+  --down: #C8102E;
+  --warn: #B45309;
+  --serif-cn: 'Songti SC','STSong','Source Han Serif SC','思源宋体',serif;
+  --sans-cn: 'PingFang SC','Source Han Sans SC','思源黑体',sans-serif;
+  --serif-en: 'EB Garamond','Times New Roman',Georgia,serif;
+  --sans-en: 'Inter','Helvetica Neue',system-ui,sans-serif;
+  --mono: 'JetBrains Mono','IBM Plex Mono','SF Mono','Courier New',monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans-cn),var(--sans-en); font-size: 16px; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+
+/* Top rail (sticky) */
+.rail {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+  padding: 14px 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--sans-en); font-size: 11pt; color: var(--muted);
+}
+.rail__brand { display: flex; align-items: center; gap: 12px; color: var(--navy); font-weight: 700; letter-spacing: 0.05em; cursor: pointer; }
+.rail__logo { width: 28px; height: 28px; display: block; object-fit: contain; }
+.rail__path { display: flex; gap: 14px; align-items: center; }
+.rail__path span:not(.sep):not(.crumb-cur) { color: var(--text); cursor: pointer; }
+.rail__path span:not(.sep):not(.crumb-cur):hover { color: var(--accent); }
+.rail__path .crumb-cur { color: var(--navy); font-weight: 700; }
+.rail__path .sep { color: var(--rule); }
+.rail__search-btn { padding: 6px 14px; border: 1px solid var(--rule); font-family: var(--mono); font-size: 9pt; letter-spacing: 0.15em; cursor: pointer; transition: all 0.15s; }
+.rail__search-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Container */
+.main { max-width: 1600px; margin: 0 auto; padding: 64px; }
+
+/* ====================== HOME VIEW ====================== */
+.home__hero { margin-bottom: 64px; padding-top: 32px; }
+.home__title { font-family: var(--serif-cn); font-size: 72pt; font-weight: 700; color: var(--navy); line-height: 1.05; letter-spacing: -0.02em; max-width: 1400px; }
+.home__rule { width: 80px; height: 4px; background: var(--accent); margin-top: 32px; }
+
+.home__layers {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 24px;
+}
+.layer-card {
+  display: flex; flex-direction: column;
+  padding: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+  min-height: 480px;
+}
+.layer-card:hover { transform: translateY(-4px); }
+.layer-card--01 { background: var(--navy); color: #FFFFFF; }
+.layer-card--02 { background: var(--soft); color: var(--text); border-top: 6px solid var(--navy); }
+.layer-card--03 { background: var(--soft); color: var(--text); border-top: 6px solid var(--accent); }
+
+.layer-card__label { font-family: var(--mono); font-size: 11pt; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; opacity: 0.7; }
+.layer-card--01 .layer-card__label { color: var(--accent); opacity: 1; }
+.layer-card__title { font-family: var(--serif-cn); font-size: 48pt; font-weight: 700; line-height: 1.1; margin-bottom: 8px; }
+.layer-card__desc { font-family: var(--sans-cn); font-size: 14pt; opacity: 0.85; line-height: 1.5; margin-bottom: 32px; }
+.layer-card__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: auto; padding-bottom: 32px; }
+.layer-card__stat-num { font-family: var(--mono); font-size: 28pt; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
+.layer-card--01 .layer-card__stat-num { color: var(--accent); }
+.layer-card--02 .layer-card__stat-num, .layer-card--03 .layer-card__stat-num { color: var(--navy); }
+.layer-card__stat-label { font-family: var(--sans-cn); font-size: 11pt; opacity: 0.75; margin-top: 4px; }
+.layer-card__cta { font-family: var(--mono); font-size: 10pt; letter-spacing: 0.2em; text-transform: uppercase; padding-top: 24px; border-top: 1px solid currentColor; opacity: 0.6; transition: opacity 0.15s; }
+.layer-card--01 .layer-card__cta { border-color: rgba(255,255,255,0.2); }
+.layer-card--02 .layer-card__cta, .layer-card--03 .layer-card__cta { border-color: var(--rule); }
+.layer-card:hover .layer-card__cta { opacity: 1; }
+
+/* ====================== LAYER VIEW ====================== */
+.layer-view__hero { margin-bottom: 64px; padding-bottom: 48px; border-bottom: 2px solid var(--navy); }
+.layer-view__eyebrow { font-family: var(--mono); font-size: 11pt; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.layer-view__title { font-family: var(--serif-cn); font-size: 56pt; font-weight: 700; color: var(--navy); line-height: 1.1; }
+.layer-view__desc { font-family: var(--serif-cn); font-size: 20pt; font-style: italic; color: var(--muted); margin-top: 16px; max-width: 1100px; }
+.layer-view__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px; margin-top: 48px; }
+.layer-view__stat-num { font-family: var(--mono); font-size: 36pt; font-weight: 700; color: var(--navy); line-height: 1; }
+.layer-view__stat-label { font-family: var(--sans-cn); font-size: 12pt; color: var(--muted); margin-top: 8px; }
+
+.section-list { list-style: none; }
+.section-row {
+  display: grid; grid-template-columns: 80px 1fr 200px 120px 32px;
+  gap: 32px; align-items: center;
+  padding: 24px 16px;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.15s ease, padding-left 0.15s ease;
+}
+.section-row:hover { background: var(--soft); padding-left: 24px; }
+.section-row__num { font-family: var(--mono); font-size: 14pt; color: var(--accent); font-weight: 700; letter-spacing: 0.05em; }
+.section-row__title-block { display: flex; flex-direction: column; gap: 4px; }
+.section-row__title { font-family: var(--serif-cn); font-size: 22pt; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.section-row__intro { font-family: var(--sans-cn); font-size: 13pt; color: var(--muted); line-height: 1.5; }
+.section-row__meta { font-family: var(--mono); font-size: 10pt; color: var(--muted); letter-spacing: 0.1em; text-align: right; }
+.section-row__count { font-family: var(--mono); font-size: 18pt; font-weight: 700; color: var(--navy); text-align: right; }
+.section-row__count-label { font-family: var(--mono); font-size: 9pt; color: var(--muted); letter-spacing: 0.15em; }
+.section-row__arrow { font-family: var(--mono); font-size: 20pt; color: var(--muted); text-align: right; }
+.section-row:hover .section-row__arrow { color: var(--accent); }
+
+/* ====================== SECTION VIEW ====================== */
+.section-view__hero { margin-bottom: 56px; padding-bottom: 32px; border-bottom: 2px solid var(--navy); }
+.section-view__eyebrow { font-family: var(--mono); font-size: 11pt; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
+.section-view__title { font-family: var(--serif-cn); font-size: 48pt; font-weight: 700; color: var(--navy); line-height: 1.1; }
+.section-view__intro { font-family: var(--serif-cn); font-size: 18pt; font-style: italic; color: var(--muted); margin-top: 16px; max-width: 1200px; }
+
+.item-list { list-style: none; }
+.item-row {
+  display: grid; grid-template-columns: 60px 1fr 200px 32px;
+  gap: 32px; align-items: center;
+  padding: 24px 16px;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.15s ease, padding-left 0.15s ease;
+}
+.item-row:hover { background: var(--soft); padding-left: 24px; }
+.item-row__num { font-family: var(--mono); font-size: 12pt; color: var(--muted); letter-spacing: 0.05em; }
+.item-row__title-block { display: flex; flex-direction: column; gap: 4px; }
+.item-row__title { font-family: var(--serif-cn); font-size: 18pt; font-weight: 700; color: var(--navy); line-height: 1.3; }
+.item-row__tagline { font-family: var(--sans-cn); font-size: 12pt; color: var(--muted); line-height: 1.5; }
+.item-row__status {
+  font-family: var(--mono); font-size: 9pt; font-weight: 700;
+  padding: 4px 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  border: 1px solid currentColor; text-align: center;
+  white-space: nowrap;
+}
+.item-row__status--active { color: var(--up); }
+.item-row__status--declining { color: var(--warn); }
+.item-row__status--killed { color: var(--down); }
+.item-row__status--experimental { color: var(--accent); }
+.item-row__metric { font-family: var(--mono); font-size: 16pt; font-weight: 700; color: var(--navy); text-align: right; letter-spacing: -0.01em; }
+.item-row__arrow { font-family: var(--mono); font-size: 18pt; color: var(--muted); text-align: right; }
+.item-row:hover .item-row__arrow { color: var(--accent); }
+
+/* ====================== DETAIL VIEW ====================== */
+.detail { max-width: 1100px; }
+.detail__top { display: flex; align-items: center; gap: 14px; font-family: var(--sans-en); font-size: 10pt; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 24px; }
+.detail__top .sep { color: var(--rule); }
+
+.status { display: inline-flex; align-items: center; padding: 4px 12px; border: 1px solid currentColor; font-family: var(--mono); font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; }
+.status--active { color: var(--up); }
+.status--declining { color: var(--warn); }
+.status--killed { color: var(--down); }
+.status--experimental { color: var(--accent); }
+
+.detail__title { font-family: var(--serif-cn); font-size: 44pt; font-weight: 700; color: var(--navy); line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 16px; }
+.detail__tagline { font-family: var(--serif-cn); font-size: 18pt; font-style: italic; color: var(--muted); line-height: 1.5; max-width: 900px; }
+
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; padding: 32px 0; margin-top: 32px; border-top: 2px solid var(--navy); border-bottom: 1px solid var(--rule); }
+.metric__num { font-family: var(--mono); font-size: 40pt; font-weight: 700; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
+.metric__num--accent { color: var(--accent); }
+.metric__label { font-family: var(--sans-cn); font-size: 12pt; color: var(--muted); margin-top: 8px; }
+
+.section { margin-top: 48px; }
+.section__label { font-family: var(--sans-en); font-size: 11pt; font-weight: 700; color: var(--navy); letter-spacing: 0.25em; text-transform: uppercase; padding-bottom: 12px; border-bottom: 1px solid var(--navy); margin-bottom: 20px; display: flex; align-items: baseline; gap: 12px; }
+.section__label-cn { font-family: var(--serif-cn); font-size: 16pt; font-weight: 700; letter-spacing: 0; text-transform: none; }
+
+.definition { font-family: var(--serif-cn); font-size: 19pt; line-height: 1.65; color: var(--text); max-width: 980px; }
+
+.current__summary { font-family: var(--serif-cn); font-size: 17pt; font-style: italic; color: var(--navy); line-height: 1.55; border-left: 4px solid var(--accent); padding-left: 24px; margin-bottom: 28px; }
+
+.timeline { list-style: none; }
+.timeline__item { display: grid; grid-template-columns: 120px 1fr; gap: 24px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--rule); }
+.timeline__date { font-family: var(--mono); font-size: 12pt; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
+.timeline__event { font-family: var(--sans-cn); font-size: 16pt; line-height: 1.5; color: var(--text); }
+.timeline__event strong { color: var(--navy); font-weight: 700; }
+
+.risk { margin-top: 28px; background: var(--soft); border-left: 4px solid var(--down); padding: 18px 24px; }
+.risk__label { font-family: var(--sans-en); font-size: 10pt; font-weight: 700; color: var(--down); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.risk__text { font-family: var(--sans-cn); font-size: 15pt; color: var(--text); line-height: 1.5; }
+
+.sources { list-style: none; }
+.sources__item { display: grid; grid-template-columns: 40px 1fr 100px 32px; gap: 20px; align-items: center; padding: 14px 0; border-top: 1px solid var(--rule); transition: background 0.15s ease, padding-left 0.15s; }
+.sources__item:hover { background: var(--soft); padding-left: 8px; }
+.sources__num { font-family: var(--mono); font-size: 12pt; color: var(--accent); font-weight: 700; }
+.sources__label { font-family: var(--sans-cn); font-size: 16pt; color: var(--text); }
+.sources__type { font-family: var(--mono); font-size: 9pt; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; text-align: right; }
+.sources__arrow { font-family: var(--mono); font-size: 16pt; color: var(--muted); text-align: right; }
+.sources__item:hover .sources__arrow { color: var(--accent); }
+
+.meta-footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: baseline; font-family: var(--sans-en); font-size: 10pt; color: var(--muted); font-style: italic; letter-spacing: 0.1em; }
+.meta__confidence { display: flex; gap: 8px; align-items: center; }
+.meta__confidence-dot { width: 8px; height: 8px; background: var(--up); border-radius: 50%; }
+.meta__confidence--medium .meta__confidence-dot { background: var(--warn); }
+.meta__confidence--low .meta__confidence-dot { background: var(--down); }
+.meta__confidence-text { font-family: var(--mono); color: var(--text); font-style: normal; font-weight: 700; letter-spacing: 0.15em; }
+
+.nav-footer { margin-top: 32px; display: flex; justify-content: space-between; font-family: var(--sans-en); font-size: 11pt; color: var(--muted); }
+.nav-footer a { color: var(--navy); cursor: pointer; }
+.nav-footer a:hover { color: var(--accent); }
+
+/* ====================== SEARCH ====================== */
+.search-overlay {
+  position: fixed; inset: 0; background: rgba(15,26,62,0.55);
+  display: none; align-items: flex-start; justify-content: center;
+  padding-top: 120px; z-index: 200;
+}
+.search-overlay.open { display: flex; }
+.search-modal { width: 720px; background: var(--bg); padding: 24px; border-top: 4px solid var(--accent); box-shadow: 0 24px 60px rgba(15,26,62,0.3); }
+.search-input { width: 100%; font-family: var(--serif-cn); font-size: 24pt; color: var(--navy); border: none; outline: none; padding: 16px 0; border-bottom: 2px solid var(--navy); }
+.search-input::placeholder { color: var(--muted); }
+.search-results { list-style: none; max-height: 480px; overflow-y: auto; margin-top: 8px; }
+.search-result { padding: 14px 8px; border-bottom: 1px solid var(--rule); cursor: pointer; display: grid; grid-template-columns: 1fr 160px; gap: 16px; align-items: center; }
+.search-result:hover, .search-result.focused { background: var(--soft); }
+.search-result__title { font-family: var(--serif-cn); font-size: 16pt; color: var(--navy); font-weight: 700; }
+.search-result__breadcrumb { font-family: var(--mono); font-size: 9pt; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+.search-result__metric { font-family: var(--mono); font-size: 11pt; color: var(--accent); text-align: right; font-weight: 700; }
+.search-hint { font-family: var(--mono); font-size: 9pt; color: var(--muted); margin-top: 16px; letter-spacing: 0.15em; }
+
+/* Empty state */
+.empty {
+  min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--serif-cn); font-size: 18pt; color: var(--muted);
+  gap: 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="rail__brand" onclick="navHome()">
+    <img class="rail__logo" src="highblock-logo.jpg" alt="HighBlock" />
+    <span>HighBlock · BitV</span>
+  </div>
+  <div class="rail__path" id="crumb"></div>
+  <div class="rail__search-btn" onclick="openSearch()">⌘ + K · 搜索</div>
+</div>
+
+<main class="main" id="main">
+  <div class="empty">
+    <div>数据加载中…</div>
+    <div style="font-family: var(--mono); font-size: 10pt;">若长时间未加载，检查 v2-data.js 是否存在</div>
+  </div>
+</main>
+
+<div class="search-overlay" id="search-overlay" onclick="if(event.target===this) closeSearch()">
+  <div class="search-modal">
+    <input class="search-input" id="search-input" placeholder="搜索业务名 / 关键词…" />
+    <ul class="search-results" id="search-results"></ul>
+    <div class="search-hint">↑↓ 选择  ·  ↵ 进入  ·  Esc 关闭</div>
+  </div>
+</div>
+
+<script src="v2-data.js"></script>
+<script>
+const statusLabels = { active: 'Active', declining: 'Declining', killed: 'Killed', experimental: 'Experimental' };
+const sourceTypeLabels = { 'official': 'Official', 'official-tbd': 'Official · TBD', 'data': 'Data', 'news': 'News', 'news-tbd': 'News · TBD', 'pending': 'Pending', 'placeholder': 'TBD' };
+
+let state = { view: 'home', layer: null, section: null, item: null };
+let allItems = [];   // flat list for search
+
+function init() {
+  if (!window.empireV2) return;  // data not yet loaded
+  // Build flat search index
+  Object.values(window.empireV2.layers).forEach(L => {
+    L.sections.forEach(S => {
+      S.items.forEach((it, i) => {
+        allItems.push({ ...it, _layer: L.id, _layerTitle: L.title, _section: S.id, _sectionTitle: S.title, _idx: i });
+      });
+    });
+  });
+  syncStateFromHash();
+  render();
+}
+
+function syncStateFromHash() {
+  const h = location.hash.slice(1).split('/').filter(Boolean);
+  if (h.length === 0) state = { view: 'home', layer: null, section: null, item: null };
+  else if (h.length === 1) state = { view: 'layer', layer: h[0], section: null, item: null };
+  else if (h.length === 2) state = { view: 'section', layer: h[0], section: h[1], item: null };
+  else state = { view: 'detail', layer: h[0], section: h[1], item: parseInt(h[2]) };
+}
+
+function pushHash(parts) { location.hash = '#/' + parts.join('/'); }
+
+function navHome() { pushHash([]); }
+function navLayer(lid) { pushHash([lid]); }
+function navSection(lid, sid) { pushHash([lid, sid]); }
+function navDetail(lid, sid, idx) { pushHash([lid, sid, idx]); }
+
+addEventListener('hashchange', () => { syncStateFromHash(); render(); window.scrollTo(0, 0); });
+
+function render() {
+  const main = document.getElementById('main');
+  renderCrumb();
+  if (state.view === 'home') main.innerHTML = renderHome();
+  else if (state.view === 'layer') main.innerHTML = renderLayer();
+  else if (state.view === 'section') main.innerHTML = renderSection();
+  else if (state.view === 'detail') main.innerHTML = renderDetail();
+}
+
+function renderCrumb() {
+  const crumb = document.getElementById('crumb');
+  const E = window.empireV2;
+  if (state.view === 'home') {
+    crumb.innerHTML = '<span class="crumb-cur">币安全业务地图</span>';
+    return;
+  }
+  const L = E.layers[state.layer];
+  let html = `<span onclick="navHome()">币安全业务地图</span><span class="sep">/</span>`;
+  if (state.view === 'layer') {
+    html += `<span class="crumb-cur">${L.title}</span>`;
+  } else {
+    const S = L.sections.find(s => s.id === state.section);
+    if (state.view === 'section') {
+      html += `<span onclick="navLayer('${L.id}')">${L.title}</span><span class="sep">/</span><span class="crumb-cur">${S.title}</span>`;
+    } else {
+      html += `<span onclick="navLayer('${L.id}')">${L.title}</span><span class="sep">/</span><span onclick="navSection('${L.id}','${S.id}')">${S.title}</span><span class="sep">/</span><span class="crumb-cur">${S.items[state.item].title}</span>`;
+    }
+  }
+  crumb.innerHTML = html;
+}
+
+function renderHome() {
+  const E = window.empireV2;
+  const ls = Object.values(E.layers);
+  return `
+    <div class="home__hero">
+      <h1 class="home__title">币安全业务地图</h1>
+      <div class="home__rule"></div>
+    </div>
+    <div class="home__layers">
+      ${ls.map((L, i) => renderLayerCard(L, i)).join('')}
+    </div>
+  `;
+}
+
+function renderLayerCard(L, idx) {
+  return `
+    <div class="layer-card layer-card--0${idx+1}" onclick="navLayer('${L.id}')">
+      <div class="layer-card__label">${L.tag}</div>
+      <div class="layer-card__title">${L.title}</div>
+      <div class="layer-card__desc">${L.desc}</div>
+      <div class="layer-card__stats">
+        ${(L.stats || []).slice(0, 4).map(s => `
+          <div>
+            <div class="layer-card__stat-num">${s[0]}</div>
+            <div class="layer-card__stat-label">${s[1]}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="layer-card__cta">查看 ${L.sections.length} 板块 →</div>
+    </div>
+  `;
+}
+
+function renderLayer() {
+  const L = window.empireV2.layers[state.layer];
+  const totalItems = L.sections.reduce((sum, s) => sum + s.items.length, 0);
+  return `
+    <div class="layer-view__hero">
+      <div class="layer-view__eyebrow">${L.tag}</div>
+      <h1 class="layer-view__title">${L.title}</h1>
+      <p class="layer-view__desc">${L.desc}</p>
+      <div class="layer-view__stats">
+        ${(L.stats || []).slice(0, 4).map(s => `
+          <div>
+            <div class="layer-view__stat-num">${s[0]}</div>
+            <div class="layer-view__stat-label">${s[1]}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <ul class="section-list">
+      ${L.sections.map((S, i) => `
+        <li class="section-row" onclick="navSection('${L.id}', '${S.id}')">
+          <span class="section-row__num">${String(i+1).padStart(2,'0')}</span>
+          <div class="section-row__title-block">
+            <div class="section-row__title">${S.title}</div>
+            <div class="section-row__intro">${S.intro || ''}</div>
+          </div>
+          <div class="section-row__meta">${S.tag || ''}</div>
+          <div class="section-row__count">${S.items.length}</div>
+          <div class="section-row__arrow">›</div>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
+function renderSection() {
+  const L = window.empireV2.layers[state.layer];
+  const S = L.sections.find(s => s.id === state.section);
+  return `
+    <div class="section-view__hero">
+      <div class="section-view__eyebrow">${L.title} · ${S.tag || ''}</div>
+      <h1 class="section-view__title">${S.title}</h1>
+      ${S.intro ? `<p class="section-view__intro">${S.intro}</p>` : ''}
+    </div>
+    <ul class="item-list">
+      ${S.items.map((it, i) => `
+        <li class="item-row" onclick="navDetail('${L.id}', '${S.id}', ${i})">
+          <span class="item-row__num">${String(i+1).padStart(2,'0')}</span>
+          <div class="item-row__title-block">
+            <div class="item-row__title">${it.title}</div>
+            <div class="item-row__tagline">${it.tagline || ''}</div>
+          </div>
+          <div class="item-row__metric">${(it.metrics && it.metrics[0]) ? it.metrics[0].num : ''}</div>
+          <div class="item-row__arrow">›</div>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
+function renderDetail() {
+  const L = window.empireV2.layers[state.layer];
+  const S = L.sections.find(s => s.id === state.section);
+  const it = S.items[state.item];
+  if (!it) return '<div class="empty">未找到此条目</div>';
+  const prevIdx = state.item > 0 ? state.item - 1 : null;
+  const nextIdx = state.item < S.items.length - 1 ? state.item + 1 : null;
+  return `
+    <div class="detail">
+      <h1 class="detail__title">${it.title}</h1>
+      <p class="detail__tagline">${it.tagline || ''}</p>
+
+      ${it.metrics && it.metrics.length ? `
+        <div class="metrics">
+          ${it.metrics.map(m => `
+            <div>
+              <div class="metric__num ${m.accent ? 'metric__num--accent' : ''}">${m.num}</div>
+              <div class="metric__label">${m.label}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <section class="section">
+        <div class="section__label">§ Definition <span class="section__label-cn">业务定义</span></div>
+        <p class="definition">${it.definition || ''}</p>
+      </section>
+
+      <section class="section">
+        <div class="section__label">§ Current <span class="section__label-cn">最新情况</span></div>
+        ${it.current && it.current.summary ? `<p class="current__summary">${it.current.summary}</p>` : ''}
+        ${it.current && it.current.timeline ? `
+          <ol class="timeline">
+            ${it.current.timeline.map(ev => `
+              <li class="timeline__item">
+                <span class="timeline__date">${ev.date}</span>
+                <span class="timeline__event">${ev.event}</span>
+              </li>
+            `).join('')}
+          </ol>
+        ` : ''}
+        ${it.current && it.current.risk ? `
+          <div class="risk">
+            <div class="risk__label">⚠ Known Risk · 风险</div>
+            <div class="risk__text">${it.current.risk}</div>
+          </div>
+        ` : ''}
+      </section>
+
+      ${it.sources && it.sources.length ? `
+        <section class="section">
+          <div class="section__label">§ Sources <span class="section__label-cn">来源</span></div>
+          <ul class="sources">
+            ${it.sources.map((s, i) => `
+              <a class="sources__item" href="${s.url}" target="_blank" rel="noopener">
+                <span class="sources__num">[${i+1}]</span>
+                <span class="sources__label">${s.label}</span>
+                <span class="sources__type">${sourceTypeLabels[s.type] || s.type}</span>
+                <span class="sources__arrow">↗</span>
+              </a>
+            `).join('')}
+          </ul>
+        </section>
+      ` : ''}
+
+      <div class="meta-footer">
+        <span>As of ${(it.meta && it.meta.asOf) || ''}</span>
+      </div>
+
+      <div class="nav-footer">
+        <a onclick="${prevIdx !== null ? `navDetail('${L.id}','${S.id}',${prevIdx})` : ''}">${prevIdx !== null ? '‹ 上一项 · ' + S.items[prevIdx].title : ''}</a>
+        <a onclick="${nextIdx !== null ? `navDetail('${L.id}','${S.id}',${nextIdx})` : ''}">${nextIdx !== null ? S.items[nextIdx].title + ' · 下一项 ›' : ''}</a>
+      </div>
+    </div>
+  `;
+}
+
+/* ============ Search ============ */
+let searchFocused = 0;
+function openSearch() { document.getElementById('search-overlay').classList.add('open'); document.getElementById('search-input').focus(); document.getElementById('search-input').value = ''; renderSearchResults(''); }
+function closeSearch() { document.getElementById('search-overlay').classList.remove('open'); }
+
+function searchItems(q) {
+  if (!q) return allItems.slice(0, 12);
+  const ql = q.toLowerCase();
+  return allItems.filter(it =>
+    (it.title || '').toLowerCase().includes(ql) ||
+    (it.tagline || '').toLowerCase().includes(ql) ||
+    (it.definition || '').toLowerCase().includes(ql)
+  ).slice(0, 24);
+}
+
+function renderSearchResults(q) {
+  searchFocused = 0;
+  const results = searchItems(q);
+  document.getElementById('search-results').innerHTML = results.map((it, i) => `
+    <li class="search-result ${i === 0 ? 'focused' : ''}" data-i="${i}"
+      onmouseenter="this.parentNode.querySelectorAll('.search-result').forEach(x=>x.classList.remove('focused')); this.classList.add('focused'); searchFocused=${i};"
+      onclick="goToSearchResult(${i})">
+      <div>
+        <div class="search-result__title">${it.title}</div>
+        <div class="search-result__breadcrumb">${it._layerTitle} · ${it._sectionTitle}</div>
+      </div>
+      <div class="search-result__metric">${(it.metrics && it.metrics[0]) ? it.metrics[0].num : ''}</div>
+    </li>
+  `).join('');
+  window._searchResults = results;
+}
+
+function goToSearchResult(i) {
+  const r = window._searchResults[i];
+  if (!r) return;
+  closeSearch();
+  navDetail(r._layer, r._section, r._idx);
+}
+
+document.getElementById('search-input').addEventListener('input', e => renderSearchResults(e.target.value));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'k' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); openSearch(); return; }
+  if (e.key === 'Escape') {
+    if (document.getElementById('search-overlay').classList.contains('open')) closeSearch();
+    else if (state.view !== 'home') history.back();
+  }
+  if (document.getElementById('search-overlay').classList.contains('open')) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); searchFocused = Math.min(searchFocused+1, (window._searchResults||[]).length-1); document.querySelectorAll('.search-result').forEach((el,i)=>el.classList.toggle('focused', i===searchFocused)); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); searchFocused = Math.max(searchFocused-1, 0); document.querySelectorAll('.search-result').forEach((el,i)=>el.classList.toggle('focused', i===searchFocused)); }
+    if (e.key === 'Enter') { e.preventDefault(); goToSearchResult(searchFocused); }
+    return;
+  }
+  if (state.view === 'detail') {
+    const S = window.empireV2.layers[state.layer].sections.find(s => s.id === state.section);
+    if (e.key === 'j' || e.key === 'ArrowRight') { if (state.item < S.items.length-1) navDetail(state.layer, state.section, state.item+1); }
+    if (e.key === 'k' || e.key === 'ArrowLeft') { if (state.item > 0) navDetail(state.layer, state.section, state.item-1); }
+  }
+});
+
+init();
+</script>
+</body>
+</html>
