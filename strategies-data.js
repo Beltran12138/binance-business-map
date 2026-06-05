@@ -76,6 +76,7 @@
         'MirrorX 正是为「持牌机构想用币安流动性但不想把资产置于交易所对手方风险下」设计',
         '满足 SFC 对对手方风险的关注',
         '当前币安吸收 MirrorX 费用：<strong>2025-07-01 至 2025-12-31 零费窗口</strong>，零费促销已延至 <strong>2026-06-30</strong>；银行 triparty 费持续吸收',
+        '<strong>⚠ 零费窗口 2026-06-30 到期（本月底）</strong>——须确认续期与否再做资金效率测算，勿按零费假设锁定方案',
         'Ceffu 有 ISO 27001/27701、SOC 1&2、Dubai VARA IPA 等正规审计与持牌',
         'FalconX Prime Connect / Orderly OmniVault / KuCoin Institutional 已采用相同栈—有实战参照'
       ]
@@ -139,7 +140,8 @@
         '币安 OTC 最小 $200K / 笔，无手续费（价差内含）',
         '2025-12 上线<strong>私密 IOI</strong>（加密圈首个，Spot IOI + Loan IOI），大额意向不公开挂簿',
         '与 Ceffu MirrorX 打通，机构可用托管资产做 OTC 结算',
-        'BES 2025-08-28 升级聚合外部 LP 网络的现货 + 期权报价，可选 OTC risk-pricing 或 bespoke execution'
+        'BES 2025-08-28 升级聚合外部 LP 网络的现货 + 期权报价，可选 OTC risk-pricing 或 bespoke execution',
+        '<strong>2026-06-04 OTC 平台升级</strong>：现货 RFQ + 定制化执行整合至同一界面，每笔订单配专属 OTC 交易员群组、实时成交与均价可视——对接体验门槛降低'
       ]
     },
     {

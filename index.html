@@ -340,6 +340,7 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <script src="v2-data.js"></script>
+<script src="updates-2026-06.js"></script>
 <script src="strategies-data.js"></script>
 <script>
 const statusLabels = { active: 'Active', declining: 'Declining', killed: 'Killed', experimental: 'Experimental' };
@@ -447,7 +448,7 @@ function renderSummaryBlock() {
   return `
     <section class="summary-block">
       <div class="summary-block__eyebrow">Executive Summary · HighBlock 视角</div>
-      <h2 class="summary-block__title">5 条切入路径</h2>
+      <h2 class="summary-block__title">${strategies.length} 条切入路径</h2>
       <p class="summary-block__sub">基于业务全景之可行性矩阵 · 点击下钻看路径 ABC + 前置条件 + 监管要点</p>
       <div class="summary-grid">
         ${strategies.map(st => `
